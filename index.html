@@ -490,7 +490,7 @@
 
       <div class="icons" aria-hidden="true">🚗 ⭐ 🚙</div>
 
-      <button class="btn primary" id="openBtn">Ketuk untuk membuka album</button>
+      <button class="btn primary" id="openBtn"onclick="openAlbum()">Ketuk untuk membuka album</button>
       <div class="hint">✨ Musik/Video opsional — nanti bisa kamu isi ✨</div>
     </div>
   </div>
@@ -694,3 +694,16 @@
               <div class="cap">MPASI pertama</div>
             </div>
           <
+            <script>
+  function openAlbum(){
+    const gate = document.getElementById('gate');
+    if(gate) gate.classList.add('hidden');
+    window.scrollBy({ top: 1, behavior: 'smooth' });
+  }
+
+  // fallback untuk HP yang agak “rewel”
+  window.addEventListener('touchend', function(e){
+    const btn = document.getElementById('openBtn');
+    if(btn && (e.target === btn || btn.contains(e.target))) openAlbum();
+  }, {passive:true});
+</script>
