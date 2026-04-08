@@ -1,721 +1,958 @@
 <!doctype html>
-<html lang="id" class="h-full">
+<html lang="id">
  <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Album Kenangan</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/element_sdk.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Montserrat:wght@300;400;500;600;700&amp;family=Pacifico&amp;family=Great+Vibes&amp;display=swap" rel="stylesheet">
   <style>
-    body {
-      box-sizing: border-box;
+    :root{
+      --sky1:#eaf5ff;
+      --sky2:#f6fbff;
+      --ink:#143a7b;
+      --muted:#5a7ab6;
+      --line:#2b63d8;
+      --card:#ffffff;
+      --shadow: 0 18px 40px rgba(20,58,123,.12);
+      --radius: 18px;
+      --max: 980px;
     }
-    
-    @keyframes wave-glow {
-      0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); opacity: 0.3; }
-      25% { transform: translateX(-30%) translateY(-20px) rotate(5deg); opacity: 0.5; }
-      50% { transform: translateX(-50%) translateY(-10px) rotate(0deg); opacity: 0.4; }
-      75% { transform: translateX(-70%) translateY(-15px) rotate(-5deg); opacity: 0.6; }
-    }
-    
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.2; transform: scale(0.8); }
-      50% { opacity: 1; transform: scale(1.2); }
-    }
-    
-    @keyframes aurora {
-      0% { transform: translateY(100%) scaleY(0.5); opacity: 0; }
-      50% { transform: translateY(0%) scaleY(1); opacity: 0.4; }
-      100% { transform: translateY(-100%) scaleY(0.5); opacity: 0; }
-    }
-    
-    @keyframes fade-in-vintage {
-      0% { opacity: 0; }
-      100% { opacity: 0.15; }
-    }
-    
-    @keyframes page-flip {
-      0% { transform: perspective(2000px) rotateY(0deg); }
-      100% { transform: perspective(2000px) rotateY(-180deg); }
-    }
-    
-    @keyframes text-glow {
-      0%, 100% { text-shadow: 0 0 20px var(--accent-color), 0 0 40px var(--accent-color); }
-      50% { text-shadow: 0 0 40px var(--accent-color), 0 0 80px var(--accent-color), 0 0 120px var(--accent-color); }
-    }
-    
-    @keyframes confetti-fall {
-      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
-    
-    @keyframes slide-up {
-      0% { opacity: 0; transform: translateY(30px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    .wave-effect {
-      position: absolute;
-      width: 200%;
-      height: 300px;
-      background: linear-gradient(90deg, 
-        transparent,
-        var(--primary-color),
-        var(--accent-color),
-        var(--secondary-color),
-        transparent
-      );
-      filter: blur(60px);
-      animation: wave-glow 8s ease-in-out infinite;
-    }
-    
-    .star {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle var(--duration) ease-in-out infinite;
-      animation-delay: var(--delay);
-    }
-    
-    .aurora-ray {
-      position: absolute;
-      width: 100px;
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; height:100%; }
+    body{
+      margin:0;
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 520px at 12% 12%, rgba(46,115,255,.10), transparent 60%),
+        radial-gradient(820px 520px at 85% 18%, rgba(255,120,186,.10), transparent 60%),
+        linear-gradient(180deg, var(--sky2), var(--sky1));
+      min-height:100%;
+      overflow-x:hidden;
       height: 100%;
-      background: linear-gradient(to top, 
-        var(--primary-color),
-        var(--accent-color),
-        transparent
-      );
-      filter: blur(40px);
-      animation: aurora 6s ease-in-out infinite;
-      opacity: 0.3;
     }
-    
-    .vintage-overlay {
-      position: absolute;
-      inset: 0;
-      background: 
-        radial-gradient(ellipse at center, transparent 0%, rgba(20, 10, 5, 0.4) 100%),
-        linear-gradient(rgba(139, 90, 43, 0.1), rgba(139, 90, 43, 0.1));
-      animation: fade-in-vintage 3s ease-out forwards;
-      pointer-events: none;
+
+    a{ color:inherit; }
+    .wrap{ max-width: var(--max); margin:0 auto; padding: 22px 16px; }
+
+    /* subtle "Canva-like" background icons */
+    .sky{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:0;
+      overflow:hidden;
     }
-    
-    .book-cover {
-      transform-style: preserve-3d;
-      transform-origin: left center;
-      transition: transform 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+    .cloud, .car, .star{
+      position:absolute;
+      opacity:.26;
+      filter: blur(.2px);
+      animation: drift var(--dur) ease-in-out infinite alternate;
+      transform: translate3d(0,0,0);
     }
-    
-    .book-cover.flipped {
-      transform: perspective(2000px) rotateY(-180deg);
+    .cloud{ font-size: 34px; opacity:.20; }
+    .car{ font-size: 22px; opacity:.18; }
+    .star{ font-size: 18px; opacity:.30; }
+    @keyframes drift{
+      from { transform: translate3d(var(--x0), var(--y0), 0); }
+      to   { transform: translate3d(var(--x1), var(--y1), 0); }
     }
-    
-    .title-glow {
-      animation: text-glow 3s ease-in-out infinite;
+    @media (prefers-reduced-motion: reduce){
+      .cloud,.car,.star{ animation:none; }
+      .reveal{ transition:none!important; transform:none!important; opacity:1!important; }
     }
-    
-    .glass-card {
-      background: linear-gradient(135deg, 
-        rgba(255, 255, 255, 0.1) 0%,
-        rgba(255, 255, 255, 0.05) 100%
-      );
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+    /* reveal on scroll */
+    .reveal{
+      opacity:0;
+      transform: translateY(16px);
+      transition: opacity .7s ease, transform .7s ease;
     }
-    
-    .btn-gradient {
-      background: linear-gradient(135deg, var(--primary-color), var(--accent-color), var(--secondary-color));
-      background-size: 200% 200%;
-      animation: gradient-shift 3s ease infinite;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .reveal.in{
+      opacity:1;
+      transform: translateY(0);
     }
-    
-    @keyframes gradient-shift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+
+    /* Gate (cover) */
+    .gate{
+      position:fixed; inset:0;
+      display:grid; place-items:center;
+      padding: 18px;
+      z-index: 50;
+      background: linear-gradient(180deg, rgba(234,245,255,.92), rgba(246,251,255,.96));
+      backdrop-filter: blur(6px);
     }
-    
-    .btn-gradient:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
+    .gate.hidden{ display:none; }
+
+    .cover{
+      width:min(520px, 92vw);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #2a67f0, #1f56cb);
+      color:#fff;
+      box-shadow: 0 22px 60px rgba(0,0,0,.18);
+      border: 2px solid rgba(255,255,255,.22);
+      padding: 22px 18px 18px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
     }
-    
-    .confetti {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      pointer-events: none;
-      z-index: 9999;
+    .cover::before{
+      content:"";
+      position:absolute; inset:-60px;
+      background:
+        radial-gradient(circle at 25% 35%, rgba(255,255,255,.10), transparent 55%),
+        radial-gradient(circle at 75% 20%, rgba(255,255,255,.10), transparent 55%);
+      transform: rotate(6deg);
     }
-    
-    .gallery-container {
-      overflow: hidden;
+    .cover > *{ position:relative; }
+    .baby{ font-size: 44px; line-height:1; }
+    .cover h1{ margin: 10px 0 4px; font-size: 34px; letter-spacing:.2px; }
+    .cover .name{ opacity:.92; margin:0; font-size: 18px; }
+    .cover .born{ margin: 12px 0 14px; opacity:.9; font-size: 14px; }
+    .cover .icons{ display:flex; gap:14px; justify-content:center; font-size: 22px; margin: 12px 0 12px; }
+    .cover .hint{ opacity:.9; font-size: 13px; margin-top: 10px; }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border: 0;
+      cursor:pointer;
+      font-weight:700;
+      font-family: inherit;
+    }
+    .btn.primary{
+      background: #fff;
+      color:#1f56cb;
+      box-shadow: 0 10px 24px rgba(0,0,0,.16);
+    }
+
+    /* Sections */
+    .hero{
+      padding: 30px 0 16px;
+      text-align:center;
+      position:relative;
+      z-index:1;
+    }
+    .bow{ font-size: 40px; }
+    .hero h2{
+      margin: 12px 0 6px;
+      font-size: clamp(30px, 5.2vw, 46px);
+      line-height:1.05;
+    }
+    .hero p{
+      margin: 8px auto 0;
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .scrollhint{
+      margin-top: 18px;
+      color: rgba(90,122,182,.75);
+      font-size: 13px;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+    }
+    .scrollhint .arrow{ font-size: 22px; animation: bounce 1.2s ease-in-out infinite alternate; }
+    @keyframes bounce{
+      from{ transform: translateY(0); opacity:.85; }
+      to  { transform: translateY(6px); opacity:1; }
+    }
+
+    .panelPink{
+      background: linear-gradient(180deg, rgba(255,208,227,.22), rgba(255,208,227,.12));
+      padding: 22px 0 26px;
+    }
+    .card{
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(20,58,123,.10);
+    }
+
+    /* Letter card */
+    .letter{
+      margin: 0 auto;
+      width: min(720px, 92vw);
+      padding: 18px 18px 16px;
+      border: 2px solid rgba(255,100,170,.22);
+      text-align:center;
       position: relative;
+      min-height: 280px;
+    }
+    .envelope{
+      cursor: pointer;
+      transition: all .6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      perspective: 1000px;
+    }
+    .envelope.opened{ display: none; }
+    .envelopeFront{
+      background: linear-gradient(135deg, rgba(255,100,170,.15), rgba(255,150,200,.10));
+      border: 3px solid rgba(255,100,170,.35);
+      border-radius: 12px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .envelopeFront::before{
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 50%;
+      background: linear-gradient(135deg, rgba(255,255,255,.4), rgba(255,255,255,.1));
+      border-radius: 12px 12px 0 0;
+      pointer-events: none;
+    }
+    .envelopeFront > *{ position: relative; }
+    .envelopeIcon{ font-size: 48px; margin-bottom: 12px; }
+    .envelopeText{
+      color: rgba(255,100,170,.8);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+    .envelopeHint{
+      color: rgba(255,100,170,.6);
+      font-size: 12px;
+      margin-top: 8px;
+      font-style: italic;
+    }
+    .envelopeFront:hover .envelopeText{ color: rgba(255,100,170,1); }
+    .envelopeFront:hover{ 
+      border-color: rgba(255,100,170,.55);
+      box-shadow: 0 12px 28px rgba(255,100,170,.18);
     }
     
-    .gallery-track {
-      display: flex;
-      transition: transform 0.5s ease;
+    .letterContent{
+      animation: slideIn .6s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    
-    .gallery-item {
-      flex-shrink: 0;
-      transition: transform 0.3s ease;
-    }
-    
-    .gallery-item:hover {
-      transform: scale(1.05);
-    }
-    
-    .fade-in {
-      opacity: 0;
-      animation: slide-up 0.8s ease-out forwards;
-    }
-    
-    .delay-1 { animation-delay: 0.2s; }
-    .delay-2 { animation-delay: 0.4s; }
-    .delay-3 { animation-delay: 0.6s; }
-    .delay-4 { animation-delay: 0.8s; }
-    .delay-5 { animation-delay: 1s; }
-    
-    :root {
-      --primary-color: #D4AF37;
-      --secondary-color: #8B4513;
-      --text-color: #FFF8E7;
-      --accent-color: #FF8C00;
-    }
-    
-    .scroll-content {
-      scroll-behavior: smooth;
-    }
-    
-    /* Mobile-first: Large sizes by default */
-    #cover-title {
-      font-size: 5rem !important;
-    }
-    
-    #cover-subtitle {
-      font-size: 2.2rem !important;
-    }
-    
-    #album-title {
-      font-size: 4rem !important;
-    }
-    
-    #divider-text {
-      font-size: 2rem !important;
-    }
-    
-    #main-message {
-      font-size: 2rem !important;
-      line-height: 1.8 !important;
-    }
-    
-    #closing-message {
-      font-size: 2.5rem !important;
-    }
-    
-    #future-message {
-      font-size: 2.2rem !important;
-      line-height: 2 !important;
-    }
-    
-    section {
-      padding: 24px 20px !important;
-    }
-    
-    header {
-      padding-top: 32px !important;
-      padding-bottom: 20px !important;
-    }
-    
-    footer {
-      padding: 32px 20px !important;
-    }
-    
-    .glass-card {
-      padding: 32px 24px !important;
-      border-radius: 20px;
-    }
-    
-    button {
-      padding: 18px 32px !important;
-      font-size: 1.1rem !important;
-      border-radius: 20px;
-    }
-    
-    #gallery-prev, #gallery-next {
-      width: 60px !important;
-      height: 60px !important;
-      font-size: 2rem !important;
-    }
-    
-    @media (min-width: 769px) {
-      #cover-title {
-        font-size: 5rem !important;
+    @keyframes slideIn{
+      from{ 
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
       }
-      
-      #album-title {
-        font-size: 3.5rem !important;
+      to{
+        opacity: 1;
+        transform: scale(1) translateY(0);
       }
     }
+    
+    .letter .seal{ font-size: 34px; }
+    .letter h3{
+      margin: 8px 0 6px;
+      color:#c81f7f;
+      font-size: 26px;
+    }
+    .letter .dear{
+      margin: 14px 0 8px;
+      font-size: 20px;
+      color:#c81f7f;
+      font-weight:700;
+    }
+    .letter p{
+      margin: 0 auto;
+      max-width: 640px;
+      color: rgba(20,58,123,.78);
+      font-size: 15px;
+      line-height:1.6;
+    }
+    .letter hr{
+      border:0;
+      height:1px;
+      background: rgba(200,31,127,.18);
+      margin: 14px auto;
+      width: min(520px, 90%);
+    }
+    .letter .sign{
+      color:#c81f7f;
+      font-weight:800;
+      font-size: 22px;
+      margin-top: 8px;
+    }
+
+    /* Timeline */
+    .timelineWrap{
+      padding: 26px 0 8px;
+      position:relative;
+    }
+    .timeline{
+      margin: 0 auto;
+      width: min(var(--max), 96vw);
+      position:relative;
+      padding: 10px 0 24px;
+    }
+    /* center line (desktop/tablet) */
+    .timeline::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:0;
+      bottom:0;
+      width: 3px;
+      background: rgba(43,99,216,.85);
+      transform: translateX(-50%);
+      border-radius: 99px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 40px 1fr;
+      gap: 14px;
+      align-items:center;
+      margin: 14px 0;
+    }
+    .dot{
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background:#fff;
+      border: 3px solid rgba(43,99,216,.95);
+      margin: 0 auto;
+      box-shadow: 0 10px 18px rgba(20,58,123,.12);
+    }
+
+    .miniPolaroid{
+      width: min(240px, 92%);
+      margin: 0 auto;
+      background:#fff;
+      border-radius: 14px;
+      padding: 10px 10px 14px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(20,58,123,.10);
+      transform: rotate(var(--rot));
+    }
+    .miniPolaroid .img{
+      width:100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(46,115,255,.14), rgba(255,120,186,.12));
+      display:grid;
+      place-items:center;
+      font-size: 46px;
+    }
+    .miniPolaroid .cap{
+      text-align:center;
+      margin-top: 8px;
+      font-size: 13px;
+      color: rgba(20,58,123,.70);
+    }
+
+    .milestone{
+      padding: 14px 14px 12px;
+    }
+    .badge{
+      display:inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color:#1f56cb;
+      background: rgba(46,115,255,.10);
+      border: 1px solid rgba(46,115,255,.14);
+      margin-bottom: 6px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+    .milestone h4{
+      margin: 2px 0 8px;
+      font-size: 22px;
+      color:#1b3f86;
+    }
+    .milestone p{
+      margin:0;
+      color: rgba(20,58,123,.74);
+      line-height:1.6;
+      font-size: 14px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+    .emojiLine{
+      margin-top: 10px;
+      font-size: 18px;
+      opacity:.9;
+    }
+
+    /* Alternate left/right */
+    .row.right .leftCol{ order:1; }
+    .row.right .rightCol{ order:3; }
+    .row.right .miniPolaroid{ transform: rotate(calc(var(--rot) * -1)); }
+
+    /* Mobile timeline (HP friendly): 1 column + line left */
+    @media (max-width: 820px){
+      .timeline::before{
+        left: 20px;
+        transform:none;
+      }
+      .row{
+        grid-template-columns: 40px 1fr;
+        gap: 12px;
+      }
+      .leftCol{ display:none; }
+      .dot{ margin: 0; }
+      .rightCol{ grid-column: 2; }
+      .milestone .mobilePolaroid{
+        display:block;
+        margin: 10px 0 12px;
+      }
+      .miniPolaroid{ width: 100%; transform: rotate(0deg); }
+    }
+    @media (min-width: 821px){
+      .milestone .mobilePolaroid{ display:none; }
+    }
+
+    /* Video section */
+    .sectionTitle{
+      text-align:center;
+      margin: 18px 0 10px;
+      font-size: 34px;
+      color:#1b3f86;
+    }
+    .sectionSub{
+      text-align:center;
+      margin: 0 0 16px;
+      color: rgba(90,122,182,.9);
+      font-size: 13px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+    .videoBox{
+      width:min(880px, 94vw);
+      margin: 0 auto;
+      border-radius: 18px;
+      padding: 10px;
+      border: 3px solid rgba(255,255,255,.7);
+      background: rgba(255,255,255,.55);
+      box-shadow: var(--shadow);
+    }
+    .videoInner{
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(46,115,255,.10), rgba(255,120,186,.10));
+      aspect-ratio: 16/9;
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      position:relative;
+    }
+    video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .videoPlaceholder{
+      text-align:center;
+      color: rgba(20,58,123,.65);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      padding: 16px;
+    }
+    .playBtn{
+      width: 62px; height: 62px;
+      border-radius: 50%;
+      border: 0;
+      cursor:pointer;
+      background: rgba(255,255,255,.75);
+      box-shadow: 0 16px 34px rgba(20,58,123,.18);
+      display:grid; place-items:center;
+      margin: 0 auto 10px;
+    }
+    .playBtn span{ font-size: 24px; margin-left: 2px; }
+
+    /* Gallery */
+    .gallery{
+      padding: 18px 0 34px;
+    }
+    .grid{
+      width:min(980px, 96vw);
+      margin: 0 auto;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding: 10px 12px;
+    }
+    @media (max-width: 820px){
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    .polaroid{
+      background:#fff;
+      border-radius: 14px;
+      padding: 10px 10px 14px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(20,58,123,.10);
+      transform: rotate(var(--rot));
+      transition: transform .25s ease;
+    }
+    .polaroid:hover{ transform: rotate(0deg) translateY(-2px); }
+    .polaroid .ph{
+      width:100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(46,115,255,.12), rgba(255,120,186,.10));
+      display:grid;
+      place-items:center;
+      font-size: 44px;
+      overflow:hidden;
+    }
+    .polaroid img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .polaroid .cap{
+      text-align:center;
+      margin-top: 8px;
+      font-size: 13px;
+      color: rgba(20,58,123,.70);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+
+    /* Footer thanks */
+    .thanks{
+      text-align:center;
+      padding: 18px 0 48px;
+    }
+    .thanks .heart{ font-size: 46px; }
+    .thanks h3{
+      margin: 10px 0 8px;
+      font-size: 34px;
+      color:#1b3f86;
+    }
+    .thanks p{
+      margin: 0 auto;
+      max-width: 760px;
+      color: rgba(20,58,123,.72);
+      line-height:1.6;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      padding: 0 14px;
+      font-size: 14px;
+    }
+    .thanks .sign{
+      margin-top: 16px;
+      font-style: italic;
+      color: rgba(90,122,182,.9);
+    }
+    .thanks .family{
+      margin-top: 6px;
+      font-weight: 800;
+      color:#1b3f86;
+    }
+
+    /* small top helper */
+    .topPad{ height: 14px; }
+
   </style>
-  <style>@view-transition { navigation: auto; }</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
- <body class="h-full m-0 p-0 overflow-x-hidden" style="font-family: 'Space Grotesk', sans-serif;">
-  <!-- COVER PAGE -->
-  <div id="cover-page" class="book-cover fixed inset-0 z-50" style="background: linear-gradient(135deg, #1a0a00 0%, #2d1810 50%, #1a0a00 100%);">
-   <!-- Background Image -->
-   <div class="absolute inset-0 opacity-40" style="background-image: url('https://i.imgur.com/BPoTOqE.jpeg'); background-size: cover; background-position: center;"></div><!-- Stars -->
-   <div id="stars-container" class="absolute inset-0 overflow-hidden"></div><!-- Wave Glow Effects -->
-   <div class="wave-effect" style="bottom: -100px; left: 0;"></div>
-   <div class="wave-effect" style="bottom: -150px; left: 20%; animation-delay: -2s;"></div>
-   <div class="wave-effect" style="bottom: -200px; left: -10%; animation-delay: -4s;"></div><!-- Aurora Rays -->
-   <div class="aurora-ray" style="left: 10%; animation-delay: 0s;"></div>
-   <div class="aurora-ray" style="left: 30%; animation-delay: -1.5s;"></div>
-   <div class="aurora-ray" style="left: 50%; animation-delay: -3s;"></div>
-   <div class="aurora-ray" style="left: 70%; animation-delay: -4.5s;"></div>
-   <div class="aurora-ray" style="left: 90%; animation-delay: -2s;"></div><!-- Vintage Overlay -->
-   <div class="vintage-overlay"></div><!-- Cover Content -->
-   <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
-    <div class="text-center px-8">
-     <h1 id="cover-title" class="title-glow text-5xl md:text-7xl lg:text-8xl font-bold mb-6" style="font-family: 'Bodoni Moda', serif; color: var(--text-color);">TIME TO REMEMBER</h1>
-     <p id="cover-subtitle" class="text-xl md:text-2xl mb-12 opacity-80" style="font-family: 'Space Grotesk', sans-serif; color: var(--text-color);">Klik untuk membuka album kenangan kita...</p><button id="open-btn" class="btn-gradient px-20 py-8 rounded-full text-3xl font-bold text-white shadow-2xl cursor-pointer border-none" style="animation: float 3s ease-in-out infinite;"> ✨ Buka Album ✨ </button>
+ <body>
+  <audio id="bgMusic" loop style="display:none;"><source src="music.mp3" type="audio/mpeg">
+  </audio><!-- animated sky layer -->
+  <div class="sky" aria-hidden="true" id="sky"></div><!-- Gate / Cover -->
+  <div class="gate" id="gate">
+   <div class="cover reveal in">
+    <div class="baby">
+     👶
     </div>
-   </div><!-- Background Music -->
-   <audio id="background-music" style="display: none;"><source src="./assets/audio/background-music.mp3" type="audio/mpeg">
-   </audio>
-  </div><!-- ALBUM CONTENT -->
-  <div id="album-content" class="min-h-full w-full hidden scroll-content" style="background-image: url('https://i.imgur.com/BPoTOqE.jpeg'); background-size: cover; background-attachment: fixed; background-position: center;">
-   <!-- Background Overlay for Better Text Visibility -->
-   <div class="absolute inset-0 bg-black bg-opacity-30" style="pointer-events: none; z-index: 1;"></div><!-- Background Effects for Album -->
-   <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-    <div class="aurora-ray" style="left: 5%; animation-delay: 0s; opacity: 0.15;"></div>
-    <div class="aurora-ray" style="left: 95%; animation-delay: -3s; opacity: 0.15;"></div>
-   </div><!-- Album Header -->
-   <header class="relative z-10 pt-16 pb-12 px-6 text-center">
-    <h1 id="album-title" class="fade-in title-glow text-4xl md:text-6xl lg:text-7xl font-bold" style="font-family: 'Bodoni Moda', serif; color: var(--text-color);">THE PICTURE THAT I CAN FEEL</h1>
-    <div class="w-32 h-1 mx-auto mt-6 rounded-full" style="background: linear-gradient(90deg, transparent, var(--primary-color), var(--accent-color), var(--primary-color), transparent);"></div>
-   </header><!-- Photo Frame Section -->
-   <section class="relative z-10 py-20 px-2 md:px-2">
-    <div class="w-full fade-in delay-2" style="max-width: 90%; margin: 0 auto;">
-     <div class="relative shadow-2xl overflow-hidden" style="box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4); aspect-ratio: 4/9; background: var(--secondary-color);">
-      <img src="./assets/images/main-photo.jpg" alt="Foto Kenangan" class="w-full h-full object-cover" loading="lazy" onerror="this.style.background='linear-gradient(135deg, #D4AF37, #8B4513)'; this.src=''; this.alt='Tambahkan foto';">
+    <h1>Album Kenangan</h1>
+    <p class="name">Nama Anakmu</p>
+    <p class="born">Lahir: 15 Januari 2024</p>
+    <div class="icons" aria-hidden="true">
+     🚗 ⭐ 🚙
+    </div><button class="btn primary" id="openBtn">Ketuk untuk membuka album</button>
+    <div class="hint">
+     ✨ Musik/Video opsional — nanti bisa kamu isi ✨
+    </div>
+   </div>
+  </div>
+  <div class="topPad"></div><!-- HERO -->
+  <header class="wrap hero reveal">
+   <div class="bow">
+    🎀
+   </div>
+   <h2>Selamat Datang di Perjalanan Kecilku</h2>
+   <p>Hai! Namaku <b>Nama Anakmu</b>. Mari kita lihat bersama perjalanan pertamaku di dunia ini, penuh dengan cinta, tawa, dan petualangan seru… 🚗✨</p>
+   <div class="scrollhint">
+    <div class="arrow">
+     ↓
+    </div>
+    <div>
+     Scroll untuk melihat lebih banyak
+    </div>
+   </div>
+  </header><!-- LETTER -->
+  <section class="panelPink">
+   <div class="wrap">
+    <div class="card letter reveal">
+     <div class="seal">
+      💌
+     </div>
+     <h3>Surat dari Ibu</h3>
+     <div class="dear">
+      Sayangku…
+     </div>
+     <p>Setiap hari melihatmu tumbuh adalah berkah terbesar dalam hidupku. Dari bayi mungil hingga sekarang, setiap senyum dan langkah kecilmu membuatku terpesona. Ibu janji akan selalu ada untuk mendukungmu, mencintaimu, dan menjaga setiap momen berharga ini. Terima kasih sudah menjadi anugerah terindah, Nak. 💙</p>
+     <hr>
+     <div class="sign">
+      Selamanya,<br>
+       Ibu 💞
      </div>
     </div>
-   </section><!-- Divider Quote Section -->
-   <section class="relative z-10 py-12 px-6 max-w-3xl mx-auto">
-    <div class="text-center fade-in">
-     <p id="divider-text" class="text-2xl md:text-3xl leading-relaxed italic font-semibold" style="font-family: 'Space Grotesk', sans-serif; color: var(--accent-color); text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">"Setiap frame adalah cerita, setiap detik adalah kenangan yang tak akan pernah hilang."</p>
-    </div>
-   </section><!-- Video Section -->
-   <section class="relative z-10 py-20 px-4 md:px-6 w-full">
-    <h2 class="fade-in text-5xl md:text-6xl text-center mb-12 font-bold" style="font-family: 'Bodoni Moda', serif; color: var(--accent-color); text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Video Kenangan</h2>
-    <div class="glass-card rounded-3xl p-6 md:p-10 fade-in delay-1" style="max-width: 95%; margin: 0 auto;">
-     <div style="aspect-ratio: 16/9; background: black; border-radius: 20px; overflow: hidden;">
-      <video id="video-frame" class="w-full h-full" controls style="width: 100%; height: 100%; object-fit: cover;">
-       <source src="./assets/videos/kenangan.mp4" type="video/mp4">Your browser does not support the video tag.
-      </video>
-     </div>
-    </div>
-   </section><!-- Gallery Section -->
-   <section class="relative z-10 py-20 px-4 md:px-6 w-full">
-    <h2 class="fade-in text-5xl md:text-6xl text-center mb-12 font-bold" style="font-family: 'Bodoni Moda', serif; color: var(--accent-color); text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Galeri Foto</h2>
-    <div style="max-width: 95%; margin: 0 auto;">
-     <div class="gallery-container relative">
-      <button id="gallery-prev" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); width: 70px; height: 70px; font-size: 2.5rem;"> ‹ </button>
-      <div class="overflow-hidden" style="margin: 0 6rem;">
-       <div id="gallery-track" class="gallery-track">
-        <!-- Gallery items -->
-        <div class="gallery-item" style="flex: 0 0 calc(50% - 30px); margin: 0 15px;">
-         <div class="rounded-2xl overflow-hidden shadow-2xl" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); aspect-ratio: 1;">
-          <img src="./assets/images/gallery-1.jpg" alt="Gallery 1" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';">
-         </div>
+   </div>
+  </section><!-- TIMELINE -->
+  <section class="timelineWrap">
+   <div class="wrap">
+    <div class="timeline" id="timeline"><!-- item 1 -->
+     <div class="row reveal">
+      <div class="leftCol">
+       <div class="miniPolaroid" style="--rot:-2.2deg">
+        <div class="img">
+         <img src="image1.jpg" alt="Hari pertamaku" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
         </div>
-        <div class="gallery-item" style="flex: 0 0 calc(50% - 30px); margin: 0 15px;">
-         <div class="rounded-2xl overflow-hidden shadow-2xl" style="background: linear-gradient(135deg, var(--accent-color), var(--primary-color)); aspect-ratio: 1;">
-          <img src="./assets/images/gallery-2.jpg" alt="Gallery 2" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';">
-         </div>
-        </div>
-        <div class="gallery-item" style="flex: 0 0 calc(50% - 30px); margin: 0 15px;">
-         <div class="rounded-2xl overflow-hidden shadow-2xl" style="background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); aspect-ratio: 1;">
-          <img src="./assets/images/gallery-3.jpg" alt="Gallery 3" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';">
-         </div>
-        </div>
-        <div class="gallery-item" style="flex: 0 0 calc(50% - 30px); margin: 0 15px;">
-         <div class="rounded-2xl overflow-hidden shadow-2xl" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); aspect-ratio: 1;">
-          <img src="./assets/images/gallery-4.jpg" alt="Gallery 4" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';">
-         </div>
-        </div>
-        <div class="gallery-item" style="flex: 0 0 calc(50% - 30px); margin: 0 15px;">
-         <div class="rounded-2xl overflow-hidden shadow-2xl" style="background: linear-gradient(135deg, var(--accent-color), var(--secondary-color)); aspect-ratio: 1;">
-          <img src="./assets/images/gallery-5.jpg" alt="Gallery 5" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';">
-         </div>
-        </div>
-        <div class="gallery-item" style="flex: 0 0 calc(50% - 30px); margin: 0 15px;">
-         <div class="rounded-2xl overflow-hidden shadow-2xl" style="background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); aspect-ratio: 1;">
-          <img src="./assets/images/gallery-6.jpg" alt="Gallery 6" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';">
-         </div>
+        <div class="cap">
+         Hari pertamaku
         </div>
        </div>
-      </div><button id="gallery-next" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); width: 70px; height: 70px; font-size: 2.5rem;"> › </button>
-     </div>
-    </div>
-   </section><!-- Message Section -->
-   <section class="relative z-10 py-16 px-6 max-w-3xl mx-auto">
-    <div class="glass-card rounded-3xl p-8 md:p-12 text-center fade-in">
-     <div class="text-6xl mb-6">
-      💝
-     </div>
-     <p id="main-message" class="text-xl md:text-2xl leading-relaxed mb-8" style="font-family: 'Space Grotesk', sans-serif; color: var(--text-color);">Setiap foto menyimpan cerita, setiap momen adalah hadiah. Bersamamu, waktu terasa begitu berarti.</p><button id="future-btn" class="btn-gradient px-8 py-4 rounded-full text-lg font-semibold text-white shadow-xl cursor-pointer border-none"> 📮 Untuk Diriku di Masa Depan </button>
-    </div>
-   </section><!-- Footer -->
-   <footer class="relative z-10 py-12 px-6 text-center">
-    <div class="w-24 h-1 mx-auto mb-8 rounded-full" style="background: linear-gradient(90deg, transparent, var(--primary-color), transparent);"></div>
-    <p id="closing-message" class="text-xl md:text-2xl mb-4" style="font-family: 'Bodoni Moda', serif; color: var(--primary-color);">Dengan cinta, untukmu selamanya ❤️</p>
-    <p class="text-sm opacity-60" style="color: var(--text-color);">Album Kenangan © 2024</p>
-   </footer>
-  </div><!-- Confetti Container -->
-  <div id="confetti-container" class="fixed inset-0 pointer-events-none z-50"></div><!-- Future Message Modal -->
-  <div id="future-modal" class="fixed inset-0 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-40">
-   <div class="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-md" id="modal-backdrop"></div>
-   <div class="relative z-50 w-full h-full md:w-11/12 md:h-5/6 overflow-y-auto" style="background: linear-gradient(135deg, #FDF5E6 0%, #F5E6D3 100%); border: 3px solid #D4A574; box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.8);"><button id="close-modal-btn" class="fixed top-8 right-8 text-gray-600 text-5xl hover:scale-125 transition-transform w-16 h-16 flex items-center justify-center z-50" style="background: rgba(255,255,255,0.9); border: none; cursor: pointer; border-radius: 50%;"> ✕ </button>
-    <div class="p-16 md:p-24 text-left max-w-4xl mx-auto"><!-- Letter header -->
-     <div class="text-right mb-16 pb-8 border-b-4 border-gray-400 border-opacity-40">
-      <p style="font-family: 'Space Grotesk', sans-serif; color: #8B4513; font-size: 2.5rem; margin: 0; font-weight: 600;">Tanggal: <span id="letter-date"></span></p>
-     </div><!-- Letter greeting -->
-     <div class="mb-16">
-      <p style="font-family: 'Space Grotesk', sans-serif; color: #8B4513; font-size: 4rem; margin: 0; font-weight: 700;">Dearest Me,</p>
-     </div><!-- Letter body -->
-     <div class="mb-20">
-      <p id="future-message" class="leading-relaxed" style="font-family: 'Space Grotesk', sans-serif; color: #5C3D2E; font-size: 2.5rem; line-height: 1.8; margin: 0; white-space: pre-wrap;">Untuk diriku dimasa depan, jangan pernah lupa momen-momen indah ini. Teruslah tersenyum, teruslah bermimpi, dan jangan pernah berhenti mencintai setiap detik kehidupan. Semoga hari-harimu selalu penuh warna dan kebahagiaan. ✨</p>
-     </div><!-- Letter closing -->
-     <div class="mt-24">
-      <p style="font-family: 'Space Grotesk', sans-serif; color: #8B4513; font-size: 2rem; margin: 0; margin-bottom: 4rem; font-weight: 600;">With all my love,</p><!-- Signature line -->
-      <div style="margin-top: 6rem;">
-       <p style="font-family: 'Great Vibes', cursive; color: #8B4513; font-size: 5rem; margin: 0; margin-bottom: 1rem;">Me</p>
-       <div style="width: 120px; height: 4px; background: #8B4513; margin: 0;"></div>
+      </div>
+      <div class="midCol">
+       <div class="dot"></div>
+      </div>
+      <div class="rightCol">
+       <div class="card milestone"><span class="badge">Newborn</span>
+        <h4>Halo Dunia! 🌍</h4>
+        <div class="mobilePolaroid">
+         <div class="miniPolaroid" style="--rot:0deg">
+          <div class="img">
+           <img src="image1.jpg" alt="Hari pertamaku" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          </div>
+          <div class="cap">
+           Hari pertamaku
+          </div>
+         </div>
+        </div>
+        <p>Akhirnya aku bertemu Mama dan Papa! Semua bilang aku mirip Papa, tapi mataku besar dari Mama! Aku siap mulai petualangan pertamaku. 💙</p>
+        <div class="emojiLine">
+         🍼 💤 👣
+        </div>
+       </div>
+      </div>
+     </div><!-- item 2 -->
+     <div class="row right reveal">
+      <div class="leftCol">
+       <div class="miniPolaroid" style="--rot:2.2deg">
+        <div class="img">
+         <img src="image2.jpg" alt="Senyum pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        </div>
+        <div class="cap">
+         Senyum pertama
+        </div>
+       </div>
+      </div>
+      <div class="midCol">
+       <div class="dot"></div>
+      </div>
+      <div class="rightCol">
+       <div class="card milestone"><span class="badge">1 Bulan</span>
+        <h4>Senyum Pertamaku! 😄</h4>
+        <div class="mobilePolaroid">
+         <div class="miniPolaroid" style="--rot:0deg">
+          <div class="img">
+           <img src="image2.jpg" alt="Senyum pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          </div>
+          <div class="cap">
+           Senyum pertama
+          </div>
+         </div>
+        </div>
+        <p>Minggu ini aku mulai tersenyum saat melihat wajah Mama dan Papa. Mereka sampai nangis terharu! Kata dokter, aku tumbuh sehat dan kuat. ✨</p>
+        <div class="emojiLine">
+         🌟 🗨️ 🎵
+        </div>
+       </div>
+      </div>
+     </div><!-- item 3 -->
+     <div class="row reveal">
+      <div class="leftCol">
+       <div class="miniPolaroid" style="--rot:-1.8deg">
+        <div class="img">
+         <img src="image3.jpg" alt="Mata berbinar" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        </div>
+        <div class="cap">
+         Mata berbinar
+        </div>
+       </div>
+      </div>
+      <div class="midCol">
+       <div class="dot"></div>
+      </div>
+      <div class="rightCol">
+       <div class="card milestone"><span class="badge">2 Bulan</span>
+        <h4>Penasaran Dengan Segalanya! 🔎</h4>
+        <div class="mobilePolaroid">
+         <div class="miniPolaroid" style="--rot:0deg">
+          <div class="img">
+           <img src="image3.jpg" alt="Mata berbinar" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          </div>
+          <div class="cap">
+           Mata berbinar
+          </div>
+         </div>
+        </div>
+        <p>Aku mulai mengikuti gerakan mainan. Mobil-mobilan jadi favoritku! Papa senang karena aku suka mobil seperti dia. 🚗</p>
+        <div class="emojiLine">
+         🚗 👁️ 🧸
+        </div>
+       </div>
+      </div>
+     </div><!-- item 4 -->
+     <div class="row right reveal">
+      <div class="leftCol">
+       <div class="miniPolaroid" style="--rot:2.4deg">
+        <div class="img">
+         <img src="image4.jpg" alt="Ocehan pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        </div>
+        <div class="cap">
+         Ocehan pertama
+        </div>
+       </div>
+      </div>
+      <div class="midCol">
+       <div class="dot"></div>
+      </div>
+      <div class="rightCol">
+       <div class="card milestone"><span class="badge">3 Bulan</span>
+        <h4>Aku Mulai Ngoceh! 🎤</h4>
+        <div class="mobilePolaroid">
+         <div class="miniPolaroid" style="--rot:0deg">
+          <div class="img">
+           <img src="image4.jpg" alt="Ocehan pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          </div>
+          <div class="cap">
+           Ocehan pertama
+          </div>
+         </div>
+        </div>
+        <p>"Aaa… Uuu… Guu…" itu suara favoritku sekarang! Mama bilang aku sedang belajar berbicara. Aku juga sudah bisa mengangkat kepala sendiri. 💪</p>
+        <div class="emojiLine">
+         🎵 💬 💪
+        </div>
+       </div>
+      </div>
+     </div><!-- item 5 -->
+     <div class="row reveal">
+      <div class="leftCol">
+       <div class="miniPolaroid" style="--rot:-2.1deg">
+        <div class="img">
+         <img src="image5.jpg" alt="Genggaman kuat" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        </div>
+        <div class="cap">
+         Genggaman kuat
+        </div>
+       </div>
+      </div>
+      <div class="midCol">
+       <div class="dot"></div>
+      </div>
+      <div class="rightCol">
+       <div class="card milestone"><span class="badge">4 Bulan</span>
+        <h4>Tangan Ajaibku! ✋</h4>
+        <div class="mobilePolaroid">
+         <div class="miniPolaroid" style="--rot:0deg">
+          <div class="img">
+           <img src="image5.jpg" alt="Genggaman kuat" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          </div>
+          <div class="cap">
+           Genggaman kuat
+          </div>
+         </div>
+        </div>
+        <p>Aku sudah bisa meraih dan menggenggam mainan sendiri. Mobil biru kesayanganku tidak pernah lepas dari tangan. Kalau ada yang mau ambil, aku langsung protes! 😤</p>
+        <div class="emojiLine">
+         🚙 ✨ 🎯
+        </div>
+       </div>
+      </div>
+     </div><!-- item 6 -->
+     <div class="row right reveal">
+      <div class="leftCol">
+       <div class="miniPolaroid" style="--rot:1.8deg">
+        <div class="img">
+         <img src="image6.jpg" alt="MPASI pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        </div>
+        <div class="cap">
+         MPASI pertama
+        </div>
+       </div>
+      </div>
+      <div class="midCol">
+       <div class="dot"></div>
+      </div>
+      <div class="rightCol">
+       <div class="card milestone"><span class="badge">6 Bulan</span>
+        <h4>Petualangan MPASI! 🥘</h4>
+        <div class="mobilePolaroid">
+         <div class="miniPolaroid" style="--rot:0deg">
+          <div class="img">
+           <img src="image6.jpg" alt="MPASI pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          </div>
+          <div class="cap">
+           MPASI pertama
+          </div>
+         </div>
+        </div>
+        <p>Hari ini aku mencoba makanan padat pertamaku! Bubur halus, labu kuning, dan ayam lembut. Aku masih belum mahir, banyak yang jatuh, tapi Mama tertawa bahagia. 😋</p>
+        <div class="emojiLine">
+         🥄 😋 🎉
+        </div>
+       </div>
       </div>
      </div>
     </div>
    </div>
-  </div>
+  </section><!-- VIDEO SECTION -->
+  <section class="wrap" style="margin-top: 34px;">
+   <h2 class="sectionTitle reveal">Momen Spesialku 📽️</h2>
+   <p class="sectionSub reveal">Video kesayangan dari petualanganku</p>
+   <div class="videoBox reveal">
+    <div class="videoInner">
+     <video id="bgVideo" controls><source src="video1.mp4" type="video/mp4"> Browser Anda tidak mendukung video
+     </video>
+     <div class="videoPlaceholder" id="videoPlaceholder">
+      <div style="font-size: 64px; margin-bottom: 12px;">
+       🎬
+      </div>
+      <p>Tempat video istimewa Anda</p>
+     </div>
+    </div>
+   </div>
+  </section><!-- GALLERY -->
+  <section class="gallery">
+   <div class="wrap">
+    <h2 class="sectionTitle reveal">Galeri Momen Berharga 📸</h2>
+    <p class="sectionSub reveal">Setiap momen adalah kenangan indah</p>
+    <div class="grid" id="gallery">
+     <div class="polaroid reveal" style="--rot:-1.5deg">
+      <div class="ph"><img src="image1.jpg" alt="Hari istimewa" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      </div>
+      <div class="cap">
+       Hari istimewa
+      </div>
+     </div>
+     <div class="polaroid reveal" style="--rot:2.1deg">
+      <div class="ph"><img src="image2.jpg" alt="Tidur nyenyak" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      </div>
+      <div class="cap">
+       Tidur nyenyak
+      </div>
+     </div>
+     <div class="polaroid reveal" style="--rot:-1.8deg">
+      <div class="ph"><img src="image3.jpg" alt="Dengan Ibu" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      </div>
+      <div class="cap">
+       Dengan Ibu
+      </div>
+     </div>
+     <div class="polaroid reveal" style="--rot:1.9deg">
+      <div class="ph"><img src="image4.jpg" alt="Cantik sekali" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      </div>
+      <div class="cap">
+       Cantik sekali
+      </div>
+     </div>
+     <div class="polaroid reveal" style="--rot:-2.3deg">
+      <div class="ph"><img src="image5.jpg" alt="Naik mobil" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      </div>
+      <div class="cap">
+       Naik mobil
+      </div>
+     </div>
+     <div class="polaroid reveal" style="--rot:1.5deg">
+      <div class="ph"><img src="image6.jpg" alt="Bintang kecil" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      </div>
+      <div class="cap">
+       Bintang kecil
+      </div>
+     </div>
+    </div>
+   </div>
+  </section><!-- THANKS / FOOTER -->
+  <section class="thanks wrap reveal">
+   <div class="heart">
+    💕
+   </div>
+   <h3>Terima Kasih, Sayang</h3>
+   <p>Album ini adalah rangkaian momen tak terlupakan yang akan selamanya tersimpan di hati Mama dan Papa. Setiap senyum, setiap tawa, setiap langkah kecilmu adalah hadiah yang tak ternilai. Kami mencintaimu dengan sepenuh hati. 💙</p>
+   <div class="sign">
+    Dengan cinta,
+   </div>
+   <div class="family">
+    👨‍👩‍👧 Keluargamu
+   </div>
+  </section>
   <script>
-    // Default configuration
-    const defaultConfig = {
-      primary_color: '#D4AF37',
-      secondary_color: '#8B4513',
-      text_color: '#FFF8E7',
-      accent_color: '#FF8C00',
-      font_family: 'Bodoni Moda',
-      font_size: 16,
-      cover_title: 'TIME TO REMEMBER',
-      cover_subtitle: 'Klik untuk membuka album kenangan kita...',
-      album_title: 'THE PICTURE THAT I CAN FEEL',
-      divider_text: '"Setiap frame adalah cerita, setiap detik adalah kenangan yang tak akan pernah hilang."',
-      main_message: 'Setiap foto menyimpan cerita, setiap momen adalah hadiah. Bersamamu, waktu terasa begitu berarti.',
-      future_message: 'Untuk diriku dimasa depan, jangan pernah lupa momen-momen indah ini. Teruslah tersenyum, teruslah bermimpi, dan jangan pernah berhenti mencintai setiap detik kehidupan. Semoga hari-harimu selalu penuh warna dan kebahagiaan. ✨',
-      closing_message: 'Dengan cinta, untukmu selamanya ❤️',
-      video_url: './assets/videos/kenangan.mp4'
-    };
+    // Open button + play music
+    const gateEl = document.getElementById('gate');
+    const openBtn = document.getElementById('openBtn');
+    const bgMusic = document.getElementById('bgMusic');
     
-    // State
-    let galleryPosition = 0;
-    let galleryItemWidth = 0;
+    openBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      gateEl.classList.add('hidden');
+      bgMusic.play().catch(err => console.log('Audio play blocked:', err));
+    });
+
+    // Envelope open/close logic
+    const envelope = document.getElementById('envelope');
+    const letterContent = document.getElementById('letterContent');
     
-    // Generate stars
-    function generateStars() {
-      const container = document.getElementById('stars-container');
-      container.innerHTML = '';
-      for (let i = 0; i < 100; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        star.style.setProperty('--duration', (2 + Math.random() * 3) + 's');
-        star.style.setProperty('--delay', Math.random() * 5 + 's');
-        star.style.width = (2 + Math.random() * 3) + 'px';
-        star.style.height = star.style.width;
-        container.appendChild(star);
-      }
+    if (envelope && letterContent) {
+      envelope.addEventListener('click', (e) => {
+        e.preventDefault();
+        envelope.style.display = 'none';
+        letterContent.style.display = 'block';
+      });
     }
-    
-    // Create confetti
-    function createConfetti() {
-      const container = document.getElementById('confetti-container');
-      const colors = ['#D4AF37', '#FF8C00', '#8B4513', '#FFD700', '#FFA500'];
-      
-      for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.top = '-20px';
-        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-        confetti.style.width = (5 + Math.random() * 10) + 'px';
-        confetti.style.height = confetti.style.width;
-        confetti.style.animation = `confetti-fall ${2 + Math.random() * 2}s linear forwards`;
-        confetti.style.animationDelay = Math.random() * 0.5 + 's';
-        container.appendChild(confetti);
+
+    // Animated background elements
+    const skyEl = document.getElementById('sky');
+    const elements = [
+      { emoji: '☁️', count: 3, type: 'cloud' },
+      { emoji: '🚗', count: 2, type: 'car' },
+      { emoji: '⭐', count: 4, type: 'star' }
+    ];
+
+    elements.forEach(({ emoji, count, type }) => {
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = type;
+        el.textContent = emoji;
         
-        setTimeout(() => confetti.remove(), 4000);
+        const x0 = Math.random() * window.innerWidth;
+        const y0 = Math.random() * window.innerHeight;
+        const x1 = x0 + (Math.random() - 0.5) * 200;
+        const y1 = y0 + (Math.random() - 0.5) * 200;
+        const dur = 8 + Math.random() * 12;
+        
+        el.style.setProperty('--x0', x0 + 'px');
+        el.style.setProperty('--y0', y0 + 'px');
+        el.style.setProperty('--x1', x1 + 'px');
+        el.style.setProperty('--y1', y1 + 'px');
+        el.style.setProperty('--dur', dur + 's');
+        el.style.left = x0 + 'px';
+        el.style.top = y0 + 'px';
+        
+        skyEl.appendChild(el);
       }
-    }
-    
-    // Gallery functions
-    function initGallery() {
-      const track = document.getElementById('gallery-track');
-      const items = track.querySelectorAll('.gallery-item');
-      if (items.length > 0) {
-        galleryItemWidth = items[0].offsetWidth + 30;
-      }
-    }
-    
-    function slideGallery(direction) {
-      const track = document.getElementById('gallery-track');
-      const items = track.querySelectorAll('.gallery-item');
-      const totalItems = items.length;
-      
-      galleryPosition += direction;
-      
-      if (galleryPosition < 0) {
-        galleryPosition = totalItems - 4;
-      } else if (galleryPosition >= totalItems - 3) {
-        galleryPosition = 0;
-      }
-      
-      track.style.transform = `translateX(-${galleryPosition * galleryItemWidth}px)`;
-    }
-    
-    // Apply colors to CSS variables
-    function applyColors(config) {
-      const root = document.documentElement;
-      root.style.setProperty('--primary-color', config.primary_color || defaultConfig.primary_color);
-      root.style.setProperty('--secondary-color', config.secondary_color || defaultConfig.secondary_color);
-      root.style.setProperty('--text-color', config.text_color || defaultConfig.text_color);
-      root.style.setProperty('--accent-color', config.accent_color || defaultConfig.accent_color);
-    }
-    
-    // Format date
-    function formatDate() {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return new Date().toLocaleDateString('id-ID', options);
-    }
-    
-    // Update UI based on config
-    async function onConfigChange(config) {
-      applyColors(config);
-      
-      const fontFamily = config.font_family || defaultConfig.font_family;
-      const fontSize = config.font_size || defaultConfig.font_size;
-      
-      document.body.style.fontFamily = `'${fontFamily}', 'Georgia', serif`;
-      
-      // Update cover
-      const coverTitle = document.getElementById('cover-title');
-      const coverSubtitle = document.getElementById('cover-subtitle');
-      if (coverTitle) {
-        coverTitle.textContent = config.cover_title || defaultConfig.cover_title;
-        coverTitle.style.fontSize = `${fontSize * 4}px`;
-        coverTitle.style.color = config.text_color || defaultConfig.text_color;
-      }
-      if (coverSubtitle) {
-        coverSubtitle.textContent = config.cover_subtitle || defaultConfig.cover_subtitle;
-        coverSubtitle.style.fontSize = `${fontSize * 1.5}px`;
-        coverSubtitle.style.color = config.text_color || defaultConfig.text_color;
-      }
-      
-      // Update album title
-      const albumTitle = document.getElementById('album-title');
-      if (albumTitle) {
-        albumTitle.textContent = config.album_title || defaultConfig.album_title;
-        albumTitle.style.fontSize = `${fontSize * 3.5}px`;
-        albumTitle.style.color = config.text_color || defaultConfig.text_color;
-      }
-      
-      // Update divider quote
-      const dividerText = document.getElementById('divider-text');
-      if (dividerText) {
-        dividerText.textContent = config.divider_text || defaultConfig.divider_text;
-        dividerText.style.fontSize = `${fontSize}px`;
-        dividerText.style.color = config.primary_color || defaultConfig.primary_color;
-      }
-      
-      // Update messages
-      const mainMessage = document.getElementById('main-message');
-      const closingMessage = document.getElementById('closing-message');
-      
-      if (mainMessage) {
-        mainMessage.textContent = config.main_message || defaultConfig.main_message;
-        mainMessage.style.fontSize = `${fontSize * 1.25}px`;
-        mainMessage.style.color = config.text_color || defaultConfig.text_color;
-      }
-      if (closingMessage) {
-        closingMessage.textContent = config.closing_message || defaultConfig.closing_message;
-        closingMessage.style.fontSize = `${fontSize * 1.25}px`;
-        closingMessage.style.color = config.primary_color || defaultConfig.primary_color;
-      }
-      
-      // Update future message
-      const futureMessage = document.getElementById('future-message');
-      if (futureMessage) {
-        futureMessage.textContent = config.future_message || defaultConfig.future_message;
-        futureMessage.style.fontSize = `${fontSize}px`;
-        futureMessage.style.color = '#5C3D2E';
-      }
-      
-      // Update date
-      const letterDate = document.getElementById('letter-date');
-      if (letterDate) {
-        letterDate.textContent = formatDate();
-      }
-      
-      // Update video
-      const videoFrame = document.getElementById('video-frame');
-      if (videoFrame && config.video_url) {
-        videoFrame.src = config.video_url;
-      }
-    }
-    
-    // Map to capabilities
-    function mapToCapabilities(config) {
-      return {
-        recolorables: [
-          {
-            get: () => config.primary_color || defaultConfig.primary_color,
-            set: (value) => {
-              config.primary_color = value;
-              window.elementSdk.setConfig({ primary_color: value });
-            }
-          },
-          {
-            get: () => config.secondary_color || defaultConfig.secondary_color,
-            set: (value) => {
-              config.secondary_color = value;
-              window.elementSdk.setConfig({ secondary_color: value });
-            }
-          },
-          {
-            get: () => config.text_color || defaultConfig.text_color,
-            set: (value) => {
-              config.text_color = value;
-              window.elementSdk.setConfig({ text_color: value });
-            }
-          },
-          {
-            get: () => config.accent_color || defaultConfig.accent_color,
-            set: (value) => {
-              config.accent_color = value;
-              window.elementSdk.setConfig({ accent_color: value });
-            }
-          }
-        ],
-        borderables: [],
-        fontEditable: {
-          get: () => config.font_family || defaultConfig.font_family,
-          set: (value) => {
-            config.font_family = value;
-            window.elementSdk.setConfig({ font_family: value });
-          }
-        },
-        fontSizeable: {
-          get: () => config.font_size || defaultConfig.font_size,
-          set: (value) => {
-            config.font_size = value;
-            window.elementSdk.setConfig({ font_size: value });
-          }
+    });
+
+    // Scroll reveal
+    const revealElements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
         }
-      };
-    }
-    
-    // Map to edit panel values
-    function mapToEditPanelValues(config) {
-      return new Map([
-        ['cover_title', config.cover_title || defaultConfig.cover_title],
-        ['cover_subtitle', config.cover_subtitle || defaultConfig.cover_subtitle],
-        ['album_title', config.album_title || defaultConfig.album_title],
-        ['divider_text', config.divider_text || defaultConfig.divider_text],
-        ['main_message', config.main_message || defaultConfig.main_message],
-        ['future_message', config.future_message || defaultConfig.future_message],
-        ['closing_message', config.closing_message || defaultConfig.closing_message],
-        ['video_url', config.video_url || defaultConfig.video_url]
-      ]);
-    }
-    
-    // Initialize SDK
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
       });
-    }
-    
-    // Event listeners
-    document.getElementById('open-btn').addEventListener('click', function() {
-      const cover = document.getElementById('cover-page');
-      const album = document.getElementById('album-content');
-      const bgMusic = document.getElementById('background-music');
-      
-      cover.classList.add('flipped');
-      
-      // Start playing music
-      bgMusic.play().catch(error => {
-        console.log('Music autoplay prevented:', error);
-      });
-      
-      setTimeout(() => {
-        cover.style.display = 'none';
-        album.classList.remove('hidden');
-        album.style.display = 'block';
-        initGallery();
-      }, 1500);
+    }, { threshold: 0.1 });
+
+    revealElements.forEach(el => {
+      observer.observe(el);
     });
-    
-    document.getElementById('future-btn').addEventListener('click', function() {
-      const modal = document.getElementById('future-modal');
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      modal.classList.add('opacity-100');
-      document.body.style.overflow = 'hidden';
-    });
-    
-    document.getElementById('close-modal-btn').addEventListener('click', function() {
-      const modal = document.getElementById('future-modal');
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      modal.classList.remove('opacity-100');
-      document.body.style.overflow = 'auto';
-    });
-    
-    document.getElementById('modal-backdrop').addEventListener('click', function() {
-      const modal = document.getElementById('future-modal');
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      modal.classList.remove('opacity-100');
-      document.body.style.overflow = 'auto';
-    });
-    
-    document.getElementById('gallery-prev').addEventListener('click', () => slideGallery(-1));
-    document.getElementById('gallery-next').addEventListener('click', () => slideGallery(1));
-    
-    // Initialize
-    generateStars();
-    onConfigChange(defaultConfig);
-    
-    // Handle window resize for gallery
-    window.addEventListener('resize', initGallery);
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cb25e2a42b5f924',t:'MTc3MDYyOTYzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e8e4eb8e0f137b5',t:'MTc3NTYyMDIyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
