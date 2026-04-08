@@ -35,7 +35,6 @@
     a{ color:inherit; }
     .wrap{ max-width: var(--max); margin:0 auto; padding: 22px 16px; }
 
-    /* subtle "Canva-like" background icons */
     .sky{
       position:fixed; inset:0;
       pointer-events:none;
@@ -61,7 +60,6 @@
       .reveal{ transition:none!important; transform:none!important; opacity:1!important; }
     }
 
-    /* reveal on scroll */
     .reveal{
       opacity:0;
       transform: translateY(16px);
@@ -72,7 +70,6 @@
       transform: translateY(0);
     }
 
-    /* Gate (cover) */
     .gate{
       position:fixed; inset:0;
       display:grid; place-items:center;
@@ -80,8 +77,17 @@
       z-index: 50;
       background: linear-gradient(180deg, rgba(234,245,255,.92), rgba(246,251,255,.96));
       backdrop-filter: blur(6px);
+      opacity: 1;
+      transition: opacity .6s ease, visibility .6s ease;
+      visibility: visible;
+      pointer-events: auto;
     }
-    .gate.hidden{ display:none; }
+    .gate.hidden{ 
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      z-index: -1;
+    }
 
     .cover{
       width:min(520px, 92vw);
@@ -126,7 +132,6 @@
       box-shadow: 0 10px 24px rgba(0,0,0,.16);
     }
 
-    /* Sections */
     .hero{
       padding: 30px 0 16px;
       text-align:center;
@@ -168,7 +173,6 @@
       border: 1px solid rgba(20,58,123,.10);
     }
 
-    /* Letter card */
     .letter{
       margin: 0 auto;
       width: min(720px, 92vw);
@@ -176,14 +180,12 @@
       border: 2px solid rgba(255,100,170,.22);
       text-align:center;
       position: relative;
-      min-height: 280px;
     }
     .envelope{
       cursor: pointer;
       transition: all .6s cubic-bezier(0.34, 1.56, 0.64, 1);
       perspective: 1000px;
     }
-    .envelope.opened{ display: none; }
     .envelopeFront{
       background: linear-gradient(135deg, rgba(255,100,170,.15), rgba(255,150,200,.10));
       border: 3px solid rgba(255,100,170,.35);
@@ -223,17 +225,35 @@
     }
     
     .letterContent{
-      animation: slideIn .6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: envelopeOpen .8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: none;
+      transform-origin: top;
     }
-    @keyframes slideIn{
+    .letterContent.show{
+      display: block;
+    }
+    @keyframes envelopeOpen{
       from{ 
         opacity: 0;
-        transform: scale(0.95) translateY(10px);
+        transform: rotateX(90deg) scale(0.9);
       }
       to{
         opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: rotateX(0deg) scale(1);
       }
+    }
+    @keyframes envelopeClose{
+      from{ 
+        opacity: 1;
+        transform: rotateX(0deg) scale(1);
+      }
+      to{
+        opacity: 0;
+        transform: rotateX(90deg) scale(0.9);
+      }
+    }
+    .letterContent.closing{
+      animation: envelopeClose .8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
     
     .letter .seal{ font-size: 34px; }
@@ -269,7 +289,6 @@
       margin-top: 8px;
     }
 
-    /* Timeline */
     .timelineWrap{
       padding: 26px 0 8px;
       position:relative;
@@ -280,7 +299,6 @@
       position:relative;
       padding: 10px 0 24px;
     }
-    /* center line (desktop/tablet) */
     .timeline::before{
       content:"";
       position:absolute;
@@ -367,12 +385,10 @@
       opacity:.9;
     }
 
-    /* Alternate left/right */
     .row.right .leftCol{ order:1; }
     .row.right .rightCol{ order:3; }
     .row.right .miniPolaroid{ transform: rotate(calc(var(--rot) * -1)); }
 
-    /* Mobile timeline (HP friendly): 1 column + line left */
     @media (max-width: 820px){
       .timeline::before{
         left: 20px;
@@ -395,7 +411,6 @@
       .milestone .mobilePolaroid{ display:none; }
     }
 
-    /* Video section */
     .sectionTitle{
       text-align:center;
       margin: 18px 0 10px;
@@ -439,19 +454,7 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       padding: 16px;
     }
-    .playBtn{
-      width: 62px; height: 62px;
-      border-radius: 50%;
-      border: 0;
-      cursor:pointer;
-      background: rgba(255,255,255,.75);
-      box-shadow: 0 16px 34px rgba(20,58,123,.18);
-      display:grid; place-items:center;
-      margin: 0 auto 10px;
-    }
-    .playBtn span{ font-size: 24px; margin-left: 2px; }
 
-    /* Gallery */
     .gallery{
       padding: 18px 0 34px;
     }
@@ -499,7 +502,6 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
 
-    /* Footer thanks */
     .thanks{
       text-align:center;
       padding: 18px 0 48px;
@@ -530,20 +532,19 @@
       color:#1b3f86;
     }
 
-    /* small top helper */
     .topPad{ height: 14px; }
-
   </style>
-  <style>body { box-sizing: border-box; }</style>
   <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js" type="text/javascript"></script>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <style>body { box-sizing: border-box; }</style>
  </head>
  <body>
-  <audio id="bgMusic" loop style="display:none;"><source src="music.mp3" type="audio/mpeg">
-  </audio><!-- animated sky layer -->
-  <div class="sky" aria-hidden="true" id="sky"></div><!-- Gate / Cover -->
+  <audio id="bgMusic" loop style="display:none;">
+   <source src="assets/music/music.mp3" type="audio/mpeg">
+  </audio>
+  <div class="sky" aria-hidden="true" id="sky"></div>
   <div class="gate" id="gate">
    <div class="cover reveal in">
     <div class="baby">
@@ -560,7 +561,7 @@
     </div>
    </div>
   </div>
-  <div class="topPad"></div><!-- HERO -->
+  <div class="topPad"></div>
   <header class="wrap hero reveal">
    <div class="bow">
     🎀
@@ -575,34 +576,48 @@
      Scroll untuk melihat lebih banyak
     </div>
    </div>
-  </header><!-- LETTER -->
+  </header>
   <section class="panelPink">
    <div class="wrap">
     <div class="card letter reveal">
-     <div class="seal">
-      💌
+     <div class="envelope" id="envelope">
+      <div class="envelopeFront">
+       <div class="envelopeIcon">
+        💌
+       </div>
+       <div class="envelopeText">
+        Surat dari Ibu
+       </div>
+       <div class="envelopeHint">
+        Klik untuk membuka
+       </div>
+      </div>
      </div>
-     <h3>Surat dari Ibu</h3>
-     <div class="dear">
-      Sayangku…
-     </div>
-     <p>Setiap hari melihatmu tumbuh adalah berkah terbesar dalam hidupku. Dari bayi mungil hingga sekarang, setiap senyum dan langkah kecilmu membuatku terpesona. Ibu janji akan selalu ada untuk mendukungmu, mencintaimu, dan menjaga setiap momen berharga ini. Terima kasih sudah menjadi anugerah terindah, Nak. 💙</p>
-     <hr>
-     <div class="sign">
-      Selamanya,<br>
-       Ibu 💞
+     <div class="letterContent" id="letterContent">
+      <div class="seal">
+       💌
+      </div>
+      <h3>Surat dari Ibu</h3>
+      <div class="dear">
+       Sayangku…
+      </div>
+      <p>Setiap hari melihatmu tumbuh adalah berkah terbesar dalam hidupku. Dari bayi mungil hingga sekarang, setiap senyum dan langkah kecilmu membuatku terpesona. Ibu janji akan selalu ada untuk mendukungmu, mencintaimu, dan menjaga setiap momen berharga ini. Terima kasih sudah menjadi anugerah terindah, Nak. 💙</p>
+      <hr>
+      <div class="sign">
+       Selamanya,<br>
+        Ibu 💞
+      </div><button class="btn primary" id="closeLetterBtn" style="margin-top: 16px;">Tutup Surat</button>
      </div>
     </div>
    </div>
-  </section><!-- TIMELINE -->
+  </section>
   <section class="timelineWrap">
    <div class="wrap">
-    <div class="timeline" id="timeline"><!-- item 1 -->
+    <div class="timeline" id="timeline">
      <div class="row reveal">
       <div class="leftCol">
        <div class="miniPolaroid" style="--rot:-2.2deg">
-        <div class="img">
-         <img src="image1.jpg" alt="Hari pertamaku" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        <div class="img"><img src="assets/images/image1.jpg" alt="Hari pertamaku" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
         </div>
         <div class="cap">
          Hari pertamaku
@@ -617,8 +632,7 @@
         <h4>Halo Dunia! 🌍</h4>
         <div class="mobilePolaroid">
          <div class="miniPolaroid" style="--rot:0deg">
-          <div class="img">
-           <img src="image1.jpg" alt="Hari pertamaku" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          <div class="img"><img src="assets/images/image1.jpg" alt="Hari pertamaku" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
           </div>
           <div class="cap">
            Hari pertamaku
@@ -631,12 +645,11 @@
         </div>
        </div>
       </div>
-     </div><!-- item 2 -->
+     </div>
      <div class="row right reveal">
       <div class="leftCol">
        <div class="miniPolaroid" style="--rot:2.2deg">
-        <div class="img">
-         <img src="image2.jpg" alt="Senyum pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        <div class="img"><img src="assets/images/image2.jpg" alt="Senyum pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
         </div>
         <div class="cap">
          Senyum pertama
@@ -651,8 +664,7 @@
         <h4>Senyum Pertamaku! 😄</h4>
         <div class="mobilePolaroid">
          <div class="miniPolaroid" style="--rot:0deg">
-          <div class="img">
-           <img src="image2.jpg" alt="Senyum pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          <div class="img"><img src="assets/images/image2.jpg" alt="Senyum pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
           </div>
           <div class="cap">
            Senyum pertama
@@ -665,12 +677,11 @@
         </div>
        </div>
       </div>
-     </div><!-- item 3 -->
+     </div>
      <div class="row reveal">
       <div class="leftCol">
        <div class="miniPolaroid" style="--rot:-1.8deg">
-        <div class="img">
-         <img src="image3.jpg" alt="Mata berbinar" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        <div class="img"><img src="assets/images/image3.jpg" alt="Mata berbinar" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
         </div>
         <div class="cap">
          Mata berbinar
@@ -685,8 +696,7 @@
         <h4>Penasaran Dengan Segalanya! 🔎</h4>
         <div class="mobilePolaroid">
          <div class="miniPolaroid" style="--rot:0deg">
-          <div class="img">
-           <img src="image3.jpg" alt="Mata berbinar" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          <div class="img"><img src="assets/images/image3.jpg" alt="Mata berbinar" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
           </div>
           <div class="cap">
            Mata berbinar
@@ -699,12 +709,11 @@
         </div>
        </div>
       </div>
-     </div><!-- item 4 -->
+     </div>
      <div class="row right reveal">
       <div class="leftCol">
        <div class="miniPolaroid" style="--rot:2.4deg">
-        <div class="img">
-         <img src="image4.jpg" alt="Ocehan pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        <div class="img"><img src="assets/images/image4.jpg" alt="Ocehan pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
         </div>
         <div class="cap">
          Ocehan pertama
@@ -719,8 +728,7 @@
         <h4>Aku Mulai Ngoceh! 🎤</h4>
         <div class="mobilePolaroid">
          <div class="miniPolaroid" style="--rot:0deg">
-          <div class="img">
-           <img src="image4.jpg" alt="Ocehan pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          <div class="img"><img src="assets/images/image4.jpg" alt="Ocehan pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
           </div>
           <div class="cap">
            Ocehan pertama
@@ -733,12 +741,11 @@
         </div>
        </div>
       </div>
-     </div><!-- item 5 -->
+     </div>
      <div class="row reveal">
       <div class="leftCol">
-       <div class="miniPolaroid" style="--rot:-2.1deg">
-        <div class="img">
-         <img src="image5.jpg" alt="Genggaman kuat" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+       <div class="miniPolaroid" style="--rot:2.1deg">
+        <div class="img"><img src="assets/images/image5.jpg" alt="Genggaman kuat" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
         </div>
         <div class="cap">
          Genggaman kuat
@@ -753,8 +760,7 @@
         <h4>Tangan Ajaibku! ✋</h4>
         <div class="mobilePolaroid">
          <div class="miniPolaroid" style="--rot:0deg">
-          <div class="img">
-           <img src="image5.jpg" alt="Genggaman kuat" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          <div class="img"><img src="assets/images/image5.jpg" alt="Genggaman kuat" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
           </div>
           <div class="cap">
            Genggaman kuat
@@ -767,12 +773,43 @@
         </div>
        </div>
       </div>
-     </div><!-- item 6 -->
+     </div>
      <div class="row right reveal">
       <div class="leftCol">
-       <div class="miniPolaroid" style="--rot:1.8deg">
-        <div class="img">
-         <img src="image6.jpg" alt="MPASI pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+       <div class="miniPolaroid" style="--rot:-2.2deg">
+        <div class="img"><img src="assets/images/image5a.jpg" alt="Terbalik-balik" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+        </div>
+        <div class="cap">
+         Terbalik-balik
+        </div>
+       </div>
+      </div>
+      <div class="midCol">
+       <div class="dot"></div>
+      </div>
+      <div class="rightCol">
+       <div class="card milestone"><span class="badge">5 Bulan</span>
+        <h4>Aku Bisa Terbalik! 🤸</h4>
+        <div class="mobilePolaroid">
+         <div class="miniPolaroid" style="--rot:0deg">
+          <div class="img"><img src="assets/images/image5a.jpg" alt="Terbalik-balik" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          </div>
+          <div class="cap">
+           Terbalik-balik
+          </div>
+         </div>
+        </div>
+        <p>Bulan ini aku berhasil terbalik dari tidur telentang jadi tengkurap! Papa dan Mama senang sekali. Aku sudah lebih kuat dan mulai eksplorasi gerakan baru. Dunia jadi lebih menarik dari posisi baru! 🌟</p>
+        <div class="emojiLine">
+         🤸 💪 🌟
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="row reveal">
+      <div class="leftCol">
+       <div class="miniPolaroid" style="--rot:-2.1deg">
+        <div class="img"><img src="assets/images/image6.jpg" alt="MPASI pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
         </div>
         <div class="cap">
          MPASI pertama
@@ -787,8 +824,7 @@
         <h4>Petualangan MPASI! 🥘</h4>
         <div class="mobilePolaroid">
          <div class="miniPolaroid" style="--rot:0deg">
-          <div class="img">
-           <img src="image6.jpg" alt="MPASI pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+          <div class="img"><img src="assets/images/image6.jpg" alt="MPASI pertama" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
           </div>
           <div class="cap">
            MPASI pertama
@@ -804,13 +840,14 @@
      </div>
     </div>
    </div>
-  </section><!-- VIDEO SECTION -->
+  </section>
   <section class="wrap" style="margin-top: 34px;">
    <h2 class="sectionTitle reveal">Momen Spesialku 📽️</h2>
    <p class="sectionSub reveal">Video kesayangan dari petualanganku</p>
    <div class="videoBox reveal">
     <div class="videoInner">
-     <video id="bgVideo" controls><source src="video1.mp4" type="video/mp4"> Browser Anda tidak mendukung video
+     <video id="bgVideo" controls>
+      <source src="assets/videos/video1.mp4" type="video/mp4"> Browser Anda tidak mendukung video
      </video>
      <div class="videoPlaceholder" id="videoPlaceholder">
       <div style="font-size: 64px; margin-bottom: 12px;">
@@ -820,49 +857,55 @@
      </div>
     </div>
    </div>
-  </section><!-- GALLERY -->
+  </section>
   <section class="gallery">
    <div class="wrap">
     <h2 class="sectionTitle reveal">Galeri Momen Berharga 📸</h2>
     <p class="sectionSub reveal">Setiap momen adalah kenangan indah</p>
     <div class="grid" id="gallery">
      <div class="polaroid reveal" style="--rot:-1.5deg">
-      <div class="ph"><img src="image1.jpg" alt="Hari istimewa" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      <div class="ph">
+       <img src="assets/images/gallery1.jpg" alt="Hari istimewa" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
       </div>
       <div class="cap">
        Hari istimewa
       </div>
      </div>
      <div class="polaroid reveal" style="--rot:2.1deg">
-      <div class="ph"><img src="image2.jpg" alt="Tidur nyenyak" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      <div class="ph">
+       <img src="assets/images/gallery2.jpg" alt="Tidur nyenyak" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
       </div>
       <div class="cap">
        Tidur nyenyak
       </div>
      </div>
      <div class="polaroid reveal" style="--rot:-1.8deg">
-      <div class="ph"><img src="image3.jpg" alt="Dengan Ibu" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      <div class="ph">
+       <img src="assets/images/gallery3.jpg" alt="Dengan Ibu" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
       </div>
       <div class="cap">
        Dengan Ibu
       </div>
      </div>
      <div class="polaroid reveal" style="--rot:1.9deg">
-      <div class="ph"><img src="image4.jpg" alt="Cantik sekali" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      <div class="ph">
+       <img src="assets/images/gallery4.jpg" alt="Cantik sekali" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
       </div>
       <div class="cap">
        Cantik sekali
       </div>
      </div>
      <div class="polaroid reveal" style="--rot:-2.3deg">
-      <div class="ph"><img src="image5.jpg" alt="Naik mobil" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      <div class="ph">
+       <img src="assets/images/gallery5.jpg" alt="Naik mobil" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
       </div>
       <div class="cap">
        Naik mobil
       </div>
      </div>
      <div class="polaroid reveal" style="--rot:1.5deg">
-      <div class="ph"><img src="image6.jpg" alt="Bintang kecil" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
+      <div class="ph">
+       <img src="assets/images/gallery6.jpg" alt="Bintang kecil" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#e5e7eb'; this.alt='Image unavailable';">
       </div>
       <div class="cap">
        Bintang kecil
@@ -870,7 +913,7 @@
      </div>
     </div>
    </div>
-  </section><!-- THANKS / FOOTER -->
+  </section>
   <section class="thanks wrap reveal">
    <div class="heart">
     💕
@@ -885,30 +928,61 @@
    </div>
   </section>
   <script>
-    // Open button + play music
-    const gateEl = document.getElementById('gate');
+    // Handle album cover opening
     const openBtn = document.getElementById('openBtn');
-    const bgMusic = document.getElementById('bgMusic');
+    const gate = document.getElementById('gate');
     
-    openBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      gateEl.classList.add('hidden');
-      bgMusic.play().catch(err => console.log('Audio play blocked:', err));
-    });
-
-    // Envelope open/close logic
-    const envelope = document.getElementById('envelope');
-    const letterContent = document.getElementById('letterContent');
-    
-    if (envelope && letterContent) {
-      envelope.addEventListener('click', (e) => {
+    if (openBtn && gate) {
+      openBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        envelope.style.display = 'none';
-        letterContent.style.display = 'block';
+        e.stopPropagation();
+        gate.classList.add('hidden');
       });
     }
 
-    // Animated background elements
+    // Video event listeners untuk kontrol musik
+    const bgVideo = document.getElementById('bgVideo');
+    const bgMusic = document.getElementById('bgMusic');
+    
+    if (bgVideo) {
+      bgVideo.addEventListener('play', () => {
+        if (bgMusic) bgMusic.volume = 0;
+      });
+      
+      bgVideo.addEventListener('pause', () => {
+        if (bgMusic) bgMusic.volume = 1;
+      });
+      
+      bgVideo.addEventListener('ended', () => {
+        if (bgMusic) bgMusic.volume = 1;
+      });
+    }
+    
+    const envelope = document.getElementById('envelope');
+    const letterContent = document.getElementById('letterContent');
+    const closeLetterBtn = document.getElementById('closeLetterBtn');
+    
+    if (envelope) {
+      envelope.addEventListener('click', (e) => {
+        e.preventDefault();
+        envelope.style.display = 'none';
+        letterContent.classList.remove('closing');
+        letterContent.classList.add('show');
+      });
+    }
+    
+    if (closeLetterBtn) {
+      closeLetterBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        letterContent.classList.add('closing');
+        setTimeout(() => {
+          letterContent.classList.remove('show');
+          letterContent.classList.remove('closing');
+          envelope.style.display = 'block';
+        }, 800);
+      });
+    }
+
     const skyEl = document.getElementById('sky');
     const elements = [
       { emoji: '☁️', count: 3, type: 'cloud' },
@@ -940,7 +1014,6 @@
       }
     });
 
-    // Scroll reveal
     const revealElements = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -954,5 +1027,5 @@
       observer.observe(el);
     });
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e8e4eb8e0f137b5',t:'MTc3NTYyMDIyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e8e953da3aa37b5',t:'MTc3NTYyMzExMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
